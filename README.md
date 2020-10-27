@@ -12,6 +12,10 @@ Provides basic file uploading and exploring features to the framework.
 + Click on browse and choose the files.zip
 + Click on upload
 
+## License
+
+[MIT License](./LICENSE)
+
 ## Credits
 
 [Credits](./CREDITS.md)
