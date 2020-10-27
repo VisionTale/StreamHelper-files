@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block page_style %}
+    <style>
+        .custom-file, .input-group-append {
+            display: inline-grid;
+        }
+        .card-header {
+            font-size: medium;
+        }
+    </style>
+{% endblock %}
+
+{% block page_content %}
+    <div class="jumbotron">
+        <h1 class="display-4">Dashboard</h1>
+        <hr class="my-4">
+        <form enctype="multipart/form-data" action="{{ url_for('files.upload') }}" method="POST">
+            <div class="input-group mb-3">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="inputGroupFile02" name="files" accept="audio/*,video/*,image/*" multiple>
+                    <input type="hidden" name="redirect_url" id="redirect_url" value="{{ url_for('files.dashboard') }}"/>
+                    <label class="custom-file-label" for="inputGroupFile02" aria-describedby="inputGroupFileAddon02">Choose file</label>
+                </div>
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                </div>
+            </div>
+        </form>
+        <hr class="my-4">
+        {% do files.sort() %}
+        {% if files %}
+            <div class="card-deck">
+            {% for file, thumb in files %}
+                <div class="card border-primary mb-3" style="max-width: 18rem; min-width: 12rem">
+                    <div class="card-header">{{ file }}</div>
+                    <img src="{{ thumb }}" class="card-img-top" alt="{{ file }}" style="max-height: 10vh">
+                    <div class="card-body">
+                        <p class="card-text">
+                            <a href="{{ url_for('get_file', filename=file) }}" class="btn btn-primary" role="button">Open</a>
+                            <a href="#" class="btn btn-primary" role="button" onclick="copyTextToClipboard(location.protocol + '//' + location.host + '{{ url_for('get_file', filename=file) }}')">Copy</a>
+                            <a href="{{ url_for('get_file', filename=file) }}" class="btn btn-danger" role="button">Rename</a>
+                            <a href="#" class="btn btn-danger" role="button" onclick="if (confirm('Are you sure? Deleted files can not be recovered')) { window.location.href='{{ url_for('files.remove') }}?files=[{{ file }}]&redirect_url={{ url_for('files.dashboard') }}' }">Delete</a>
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+            <a href="{{ url_for('files.dashboard') }}?ignore_cached=True" class="btn btn-primary" role="button">Reload Thumbnails</a>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block page_scripts %}
+    <script>
+
+    </script>
+{% endblock %}
+
