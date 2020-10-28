@@ -1,4 +1,4 @@
-from os import remove as rm, listdir
+from os import remove as rm, listdir, rename as rn
 from os.path import join, isdir, isfile
 from pathlib import Path
 
@@ -61,7 +61,7 @@ def upload():
 @login_required
 def remove():
     """
-    Removes an uploaded file from the media folder. Add redirect_url as post parameter to redirect after deletion.
+    Removes a file from the media folder. Add redirect_url as post parameter to redirect after deletion.
     :return: redirect if redirect_url was passed, otherwise either json or plain html response
     """
     create_media_folder()
@@ -85,6 +85,45 @@ def remove():
         else:
             flash(f'File {file} not found. Deletion skipped')
             logger.warning(f'File {file} not found. Deletion skipped')
+
+    return redirect_or_response(request, 200, redirect_url, 'Success')
+
+
+@bp.route('/rename', methods=['GET'])
+@login_required
+def rename():
+    """
+    Rename a file in the media folder. Add redirect_url as post parameter to redirect after renaming.
+    :return: redirect if redirect_url was passed, otherwise either json or plain html response
+    """
+    create_media_folder()
+
+    redirect_url = request.args.get('redirect_url')
+
+    from . import config
+
+    old_name = request.args.get('old_name')
+    new_name = request.args.get('new_name')
+
+    if not old_name or old_name == '' or not new_name or new_name == '':
+        flash('Missing new or old filename')
+        return redirect_or_response(request, 400, redirect_url, 'Missing new or old filename argument')
+
+    old_name = secure_filename(old_name)
+    new_name = secure_filename(new_name)
+
+    old_fp = join(config.get('webapi', 'media_path'), old_name)
+    new_fp = join(config.get('webapi', 'media_path'), new_name)
+
+    if not isfile(old_fp):
+        flash('File not found')
+        return redirect_or_response(request, 400, redirect_url, 'File not found')
+
+    if isfile(new_fp):
+        flash('Name already taken')
+        return redirect_or_response(request, 400, redirect_url, 'Name already taken')
+
+    rn(old_fp, new_fp)
 
     return redirect_or_response(request, 200, redirect_url, 'Success')
 
