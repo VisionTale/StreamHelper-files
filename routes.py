@@ -33,18 +33,16 @@ def upload():
     """
     create_media_folder()
 
-    redirect_url = request.form.get('redirect_url')
-
     from . import config, logger
 
     if len(request.files) == 0:
         flash('No file part')
-        return redirect_or_response(request, 400, redirect_url, 'No files argument')
+        return redirect_or_response(request, 400, 'No files argument')
 
     files = request.files.getlist('files')
     if len(files) == 1 and files[0].filename == '' or not files:
         flash('No selected file')
-        return redirect_or_response(request, 400, redirect_url, 'Invalid files argument')
+        return redirect_or_response(request, 400, 'Invalid files argument')
 
     for file in files:
         logger.info(f'Uploading file {file}')
@@ -54,7 +52,7 @@ def upload():
         file.save(filepath)
         logger.debug('-> File saved')
 
-    return redirect_or_response(request, 200, redirect_url, 'Success')
+    return redirect_or_response(request, 200, 'Success')
 
 
 @bp.route('/remove', methods=['GET'])
@@ -66,15 +64,13 @@ def remove():
     """
     create_media_folder()
 
-    redirect_url = request.args.get('redirect_url')
-
     from . import config, logger
 
     files = request.args.getlist('files')
 
     if len(files) == 1 and files[0] == '' or not files:
         flash('No selected file')
-        return redirect_or_response(request, 400, redirect_url, 'Invalid files argument')
+        return redirect_or_response(request, 400, 'Invalid files argument')
 
     for file in files:
         filename = secure_filename(file)
@@ -86,7 +82,7 @@ def remove():
             flash(f'File {file} not found. Deletion skipped')
             logger.warning(f'File {file} not found. Deletion skipped')
 
-    return redirect_or_response(request, 200, redirect_url, 'Success')
+    return redirect_or_response(request, 200, 'Success')
 
 
 @bp.route('/rename', methods=['GET'])
@@ -98,8 +94,6 @@ def rename():
     """
     create_media_folder()
 
-    redirect_url = request.args.get('redirect_url')
-
     from . import config
 
     old_name = request.args.get('old_name')
@@ -107,7 +101,7 @@ def rename():
 
     if not old_name or old_name == '' or not new_name or new_name == '':
         flash('Missing new or old filename')
-        return redirect_or_response(request, 400, redirect_url, 'Missing new or old filename argument')
+        return redirect_or_response(request, 400, 'Missing new or old filename argument')
 
     old_name = secure_filename(old_name)
     new_name = secure_filename(new_name)
@@ -117,15 +111,15 @@ def rename():
 
     if not isfile(old_fp):
         flash('File not found')
-        return redirect_or_response(request, 400, redirect_url, 'File not found')
+        return redirect_or_response(request, 400, 'File not found')
 
     if isfile(new_fp):
         flash('Name already taken')
-        return redirect_or_response(request, 400, redirect_url, 'Name already taken')
+        return redirect_or_response(request, 400, 'Name already taken')
 
     rn(old_fp, new_fp)
 
-    return redirect_or_response(request, 200, redirect_url, 'Success')
+    return redirect_or_response(request, 200, 'Success')
 
 
 @bp.route('/list', methods=['GET'])
