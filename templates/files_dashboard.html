@@ -33,47 +33,47 @@
         {% if files %}
             <div class="card-deck">
             {% for file, thumb in files %}
-                <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+                <div class="col-xl-2 col-lg-3 col-md-6 col-sm-12 col-12">
                 <div class="card border-primary mb-3" style="width: 100%;">
                     <div class="card-header">{{ file }}</div>
-                    <img src="{{ thumb }}" class="card-img-top" alt="{{ file }}" style="max-height: 10vh">
-                    <div class="card-body">
-                        <p class="card-text">
-                            <a href="{{ url_for('get_file', filename=file) }}" class="btn btn-primary" role="button">Open</a>
-                            <a
-                                href="#"
-                                class="btn btn-primary"
-                                role="button"
-                                onclick="copyTextToClipboard(location.protocol + '//' + location.host + '{{ url_for('get_file', filename=file) }}')"
-                            >
-                                Copy
-                            </a>
-                            <a
-                                href="#"
-                                class="btn btn-danger"
-                                role="button"
-                                onclick="
-                                        new_name = prompt('Enter new file name:', '{{ file }}')
-                                        if (new_name !== '' && new_name !== '{{ file }}') {
-                                            window.location.href='{{ url_for('files.rename') }}?old_name={{ file }}&new_name=' + new_name + '&redirect_url={{ url_for('files.dashboard') }}'
-                                        }
-                                        "
-                            >
-                                Rename
-                            </a>
-                            <a
-                                href="#"
-                                class="btn btn-danger"
-                                role="button"
-                                onclick="
-                                        if (confirm('Are you sure? Deleted files can not be recovered')) {
-                                            window.location.href='{{ url_for('files.remove') }}?files=[{{ file }}]&redirect_url={{ url_for('files.dashboard') }}'
-                                        }
-                                        "
-                            >
-                                Delete
-                            </a>
-                        </p>
+                    <img src="{{ thumb }}" class="card-img-top" alt="{{ file }}" style="max-height: 15vh;">
+                    <div class="card-body card-body-flat">
+                        <div class="row">
+                        <a href="{{ url_for('get_file', filename=file) }}" class="btn btn-primary btn-flat col-6" role="button">Open</a>
+                        <a
+                            href="#"
+                            class="btn btn-primary btn-flat col-6"
+                            role="button"
+                            onclick="copyTextToClipboard(location.protocol + '//' + location.host + '{{ url_for('get_file', filename=file) }}')"
+                        >
+                            Copy
+                        </a>
+                        <a
+                            href="#"
+                            class="btn btn-danger btn-flat col-6"
+                            role="button"
+                            onclick="
+                                    new_name = prompt('Enter new file name:', '{{ file }}');
+                                    if (new_name !== '' && new_name !== '{{ file }}') {
+                                        window.location.href='{{ url_for('files.rename') }}?old_name={{ file }}&new_name=' + new_name + '&redirect_url={{ url_for('files.dashboard') }}'
+                                    }
+                                    "
+                        >
+                            Rename
+                        </a>
+                        <a
+                            href="#"
+                            class="btn btn-danger btn-flat col-6"
+                            role="button"
+                            onclick="
+                                    if (confirm('Are you sure? Deleted files can not be recovered')) {
+                                        window.location.href='{{ url_for('files.remove') }}?files=[{{ file }}]&redirect_url={{ url_for('files.dashboard') }}'
+                                    }
+                                    "
+                        >
+                            Delete
+                        </a>
+                        </div>
                     </div>
                 </div>
                 </div>

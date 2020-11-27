@@ -1,3 +1,6 @@
+"""
+Initializes the files plugin.
+"""
 from os import getenv
 from os.path import join
 
@@ -18,6 +21,11 @@ provides_pages: list = [
 
 
 def set_blueprint(blueprint: Blueprint):
+    """
+    Plugins factory method to set a blueprint.
+
+    :param blueprint:
+    """
     global bp
     bp = blueprint
 
